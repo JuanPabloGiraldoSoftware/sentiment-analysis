@@ -25,6 +25,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
+
 from sklearn.metrics import roc_curve, auc
 count_progress=1
 len_df=0
@@ -112,6 +115,28 @@ def print_shape(a,b):
     print("="*30)
     print(b.shape)
 
+def print_confm(confm):
+    fig, ax = plt.subplots(figsize=(5, 5))
+    ax.matshow(confm, cmap=plt.cm.Oranges, alpha=0.3)
+    for i in range(confm.shape[0]):
+        for j in range(confm.shape[1]):
+            ax.text(x=j, y=i,s=confm[i, j], va='center', ha='center', size='xx-large')
+    
+    plt.xlabel('Predictions', fontsize=18)
+    plt.ylabel('Actuals', fontsize=18)
+    plt.title('Confusion Matrix', fontsize=18)
+    plt.show()
+
+def print_metrics(y_test,y_pred):
+    pscore = precision_score(y_test, y_pred)*100
+    rscore = recall_score(y_test, y_pred)*100
+    ascore = accuracy_score(y_test, y_pred)*100
+    fscore = f1_score(y_test, y_pred)*100
+    print('Precision: %.3f' % pscore)
+    print('Recall: %.3f' % rscore)
+    print('Accuracy: %.3f' % ascore)
+    print('F1 Score: %.3f' % fscore)
+
 def training_model():
     df = pd.read_csv("clean_rev_movies.csv")
     df = df.loc[:40000]
@@ -121,86 +146,23 @@ def training_model():
     print(Y)
     print("###################################################")
     vectorizer = CountVectorizer()
-    x_train, x_test, y_train, y_test = train_test_split(X,Y,stratify=Y, test_size=0.33)
+    x_train, x_test, y_train, y_test = train_test_split(X,Y,stratify=Y, test_size=0.30)
     print_shape(x_train,x_test)
     x_train_bow=vectorizer.fit_transform(x_train)
     x_test_bow=vectorizer.transform(x_test)
     print_shape(x_train_bow,x_test_bow)
-    grid_params = { 'n_neighbors' : [40,50,60,70,80,90],
-               'metric' : ['manhattan']}
-    knn=KNeighborsClassifier()
-    clf = RandomizedSearchCV(knn, grid_params, random_state=0,n_jobs=-1,verbose=1)
-    clf.fit(x_train_bow,y_train)
-    print(clf.best_params_)
-    print(clf.best_score_)
-    print(clf.cv_results_)
-    train_fpr,train_tpr,thresholds=roc_curve(y_train,clf.predict_proba(x_train_bow)[:,1])
-    test_fpr,test_tpr,thresholds=roc_curve(y_test,clf.predict_proba(x_test_bow)[:,1])
-    plt.plot(train_fpr,train_tpr,label="Training Accuracy="+str(round(auc(train_fpr, train_tpr),2)))
-    plt.plot(test_fpr,test_tpr,label="Testing Accuracy ="+str(round(auc(test_fpr, test_tpr),2)))
-    plt.legend()
-    plt.xlabel("Thresholds")
-    plt.ylabel("ACCURACY")
-    plt.title("Training and Testing ROC Curves")
-    plt.show()
+
+
+    #KNearestNeighbors
+    knn=KNeighborsClassifier(n_neighbors=10)
+    knn.fit(x_train_bow, y_train)
+    y_pred_knn = knn.predict(x_test_bow)
+    confm_knn = confusion_matrix(y_test, y_pred_knn)
+    #print_confm(confm_knn)
+    print_metrics(y_test,y_pred_knn)
+
     
 
 training_model()
 
 
-
-def single_test():
-    rev=df2.loc[2].review
-    print(rev)
-    #Removing html <br /> tag
-
-    compile_html_tag=re.compile('(\s*)<br />(\s*)')
-    no_html_rev= compile_html_tag.sub(' ',rev)
-    print("===============================================================================")
-    print(no_html_rev)
-    n_rev= re.sub(r'[^a-zA-Z\s]', '', no_html_rev)
-    print("===============================================================================")
-    print(n_rev)
-    #Remving all stopwords
-    rev_tokens=word_tokenize(n_rev)
-    rev_tokens_without_sw = [word for word in rev_tokens if not word in stopwords.words()]
-    print("===============================================================================")
-    print(rev_tokens_without_sw)
-    rev_without_sw = ""
-    for token in rev_tokens_without_sw:
-        rev_without_sw += token+" "
-    print("===============================================================================")
-    rev_without_sw=rev_without_sw.strip()
-    print(rev_without_sw)
-    #Stemming
-    stemmed_rev=""
-    clean_rev_tokens = word_tokenize(rev_without_sw)
-    porter=PorterStemmer()
-    for token in clean_rev_tokens:
-        stemmed_rev+=porter.stem(token)+" "
-    stemmed_rev=stemmed_rev.strip()
-    print("===============================================================================")
-    print(stemmed_rev)
-    #Bag of words
-    stemmed_rev_tokens=word_tokenize(stemmed_rev)
-    vocab=[]
-    for word in stemmed_rev_tokens:
-        if word not in vocab:
-            vocab.append(word)
-    print(vocab)
-    index_word={}
-    i = 0   
-    for word in vocab:
-        index_word[word]=i
-        i+=1
-    count_dict = defaultdict(int)
-    vec = [0 for _ in range(len(vocab))]
-    for item in stemmed_rev_tokens:
-        count_dict[item] += 1
-    for key,item in count_dict.items():
-        vec[index_word[key]] = item
-    print(vec)
-    df2.loc[2].review=vec
-    for index,row in df2.iterrows():
-        print(row['review'])
-    print(df2)
