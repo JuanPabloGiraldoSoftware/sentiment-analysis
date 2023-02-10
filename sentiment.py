@@ -16,6 +16,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 import re #To remove non-alphabetic characters
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 stopwords=stopwords.words('english')
@@ -25,9 +26,14 @@ from collections import defaultdict
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import RandomizedSearchCV
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import confusion_matrix
-from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, mean_absolute_error, mean_squared_error
 
 from sklearn.metrics import roc_curve, auc
 count_progress=1
@@ -138,8 +144,17 @@ def print_metrics(y_test,y_pred):
     print('Accuracy: %.3f' % ascore)
     print('F1 Score: %.3f' % fscore)
 
+def print_linear_metrics(y_test, y_pred):
+    mae = mean_absolute_error(y_test, y_pred) 
+    mse = mean_squared_error(y_test, y_pred)
+    rmse = np.sqrt(mse)
+    print('Mean Absolute Error: %.3f' % mae)
+    print('Mean Squared Error: %.3f' % mse)
+    print('Root Mean Squared Deviation: %.3f' % rmse)
+
 def training_model():
     df = pd.read_csv("clean_rev_movies.csv")
+    print(df.shape)
     df = df.loc[:40000]
     X=df['review']
     Y=df['sentiment']
@@ -153,17 +168,96 @@ def training_model():
     x_test_bow=vectorizer.transform(x_test)
     print_shape(x_train_bow,x_test_bow)
 
-
-    #KNearestNeighbors
-    knn=KNeighborsClassifier(n_neighbors=10)
-    knn.fit(x_train_bow, y_train)
-    y_pred_knn = knn.predict(x_test_bow)
+    #KNearestNeighbors X -> Costo computacional alto
+    #knn=KNeighborsClassifier()
+    #k_range=list(range(1,50))
+    #options=['uniform', 'distance']
+    #param_grid = dict(n_neighbors=k_range, weights=options)
+    #rand_knn = RandomizedSearchCV(knn, param_grid, cv=10, scoring='accuracy', n_iter=10, random_state=0)
+    #rand_knn.fit(x_train_bow, y_train)
+    #print(rand_knn.best_score_)
+    #print(rand_knn.best_params_)
     #confm_knn = confusion_matrix(y_test, y_pred_knn)
     #print_confm(confm_knn)
-    print_metrics(y_test,y_pred_knn)
+    #print("=============K NEAREST NEIGHBORS============")
+    #print_metrics(y_test,y_pred_knn)
+    #print("============================================")
 
+    #Logistic Regression
+    lgr=LogisticRegression(random_state=0)
+    lgr.fit(x_train_bow,y_train)
+    y_pred_lgr = lgr.predict(x_test_bow)
+    print("=============LOGISTIC REGRESSION============")
+    print_metrics(y_test,y_pred_lgr)
+    print("============================================")
+
+    #Linear Regression
+    lnr=LinearRegression()
+    lnr.fit(x_train_bow,y_train)
+    y_pred_lnr = lnr.predict(x_test_bow)
+    print("=============LINEAR REGRESSION============")
+    print_linear_metrics(y_test,y_pred_lnr)
+    print("============================================")   
+
+    #Random Forest
+    rfc=RandomForestClassifier(max_depth=2, random_state=0)
+    rfc.fit(x_train_bow,y_train)
+    y_pred_rfc = rfc.predict(x_test_bow)
+    print("=============RANDOM FOREST============")
+    print_metrics(y_test,y_pred_rfc)
+    print("============================================")   
+
+    #Decision Tree
+    dtc=DecisionTreeClassifier()
+    dtc.fit(x_train_bow,y_train)
+    y_pred_dtc = dtc.predict(x_test_bow)
+    print("=============DECISION TREE============")
+    print_metrics(y_test,y_pred_dtc)
+    print("============================================")   
+
+    #Support Vector Macine  X -> Costo computacional alto
+    #svc=SVC(C = 100, kernel = 'linear', random_state=123)
+    #svc.fit(x_train_bow,y_train)
+    #y_pred_svc = svc.predict(x_test_bow)
+    #print("=============SUPPORT VECTOR MACHINE============")
+    #print_metrics(y_test,y_pred_svc)
+    #print("============================================")   
+
+    #Gaussian Naive Bayes
+    gnbc=GaussianNB()
+    gnbc.fit(x_train_bow.toarray(),y_train)
+    y_pred_gnbc = gnbc.predict(x_test_bow)
+    print("=============GAUSSIAN NAIVE BAYES============")
+    print_metrics(y_test,y_pred_gnbc)
+    print("============================================")   
+
+def testing_k_neighbors():
+    accuracy_hist = []
+    for i in range (1,21):
+        knn=KNeighborsClassifier(n_neighbors=i)
+        knn.fit(x_train_bow, y_train)
+        yi_pred_knn = knn.predict(x_test_bow)
+        acc_i = accuracy_score(y_test, yi_pred_knn)
+        accuracy_hist.append(acc_i)
+        print(f"K: {i}, accuracy: {acc_i}")
+    print(accuracy_hist)
+
+def plot_knn_results():
+    k_axis = [i for i in range (1,21)]
+    acc =[0.7384384634613782, 0.7435213732188984, 0.7574368802599784, 0.7678526789434214, 
+    0.7681859845012916, 0.7745187901008249, 0.7729355887009416, 0.7774352137321889, 0.7742688109324223, 
+    0.7810182484792934, 0.7776851929005916, 0.7854345471210732, 0.783101408215982, 0.7866844429630864, 
+    0.784934588784268, 0.78860094992084, 0.7873510540788268, 0.7893508874260479, 0.7856011999000083, 0.7916006999416715]
+    #x_ticks=np.arange(1,21,1)
+    #y_ticks= np.arange (0.7, 0.8, 0.01)
+    #plt.xticks(x_ticks)
+    #plt.yticks(y_ticks)
+    plt.plot(k_axis,acc)
+    plt.xlabel("K value")
+    plt.ylabel("Accuracy")
+    plt.show()
     
-
+#plot_knn_results()
 training_model()
 
 
