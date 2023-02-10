@@ -6,6 +6,7 @@
 #movies1.csv Link: https://www.kaggle.com/code/lakshmi25npathi/sentiment-analysis-of-imdb-movie-reviews
 #movies2.csv Link: https://www.kaggle.com/code/yasserh/imdb-movie-rating-sentiment-analysis/data
 
+#Drive with all csv datasets: https://drive.google.com/drive/folders/1suuC9UCK2SY4qtHnn4L7Jubbh-b55ZL9?usp=sharing
 
 ###################################################
 #          libraries and external functions       #
@@ -22,7 +23,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from collections import defaultdict
 from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import confusion_matrix
@@ -145,7 +146,7 @@ def training_model():
     print(X)
     print(Y)
     print("###################################################")
-    vectorizer = CountVectorizer()
+    vectorizer = TfidfVectorizer() #mejor desempeño sobre el CountVectorizer a cambio de costo computacional
     x_train, x_test, y_train, y_test = train_test_split(X,Y,stratify=Y, test_size=0.30)
     print_shape(x_train,x_test)
     x_train_bow=vectorizer.fit_transform(x_train)
@@ -157,7 +158,7 @@ def training_model():
     knn=KNeighborsClassifier(n_neighbors=10)
     knn.fit(x_train_bow, y_train)
     y_pred_knn = knn.predict(x_test_bow)
-    confm_knn = confusion_matrix(y_test, y_pred_knn)
+    #confm_knn = confusion_matrix(y_test, y_pred_knn)
     #print_confm(confm_knn)
     print_metrics(y_test,y_pred_knn)
 
