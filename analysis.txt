@@ -22,26 +22,42 @@ K: 19, accuracy: 0.7856011999000083
 K: 20, accuracy: 0.7916006999416715
 
 
-=============LOGISTIC REGRESSION============
+=============LOGISTIC REGRESSION/DEFAULT PARAMETERS============
 Precision: 87.297
 Recall: 91.197
 Accuracy: 88.968
 F1 Score: 89.204
 ============================================
-=============LINEAR REGRESSION============
+=============LINEAR REGRESSION/DEFAULT PARAMETERS============
 Mean Absolute Error: 0.339
 Mean Squared Error: 0.186
 Root Mean Squared Deviation: 0.431
 ============================================
-=============RANDOM FOREST============
+=============RANDOM FOREST/DEFAULT PARAMETERS============
 Precision: 74.310
 Recall: 77.643
 Accuracy: 75.410
 F1 Score: 75.940
 ============================================
-=============DECISION TREE============
+=============DECISION TREE/DEFAULT PARAMETERS============
 Precision: 71.460
 Recall: 71.507
 Accuracy: 71.486
 F1 Score: 71.483
 ============================================
+
+LogisticRegression(C=0.1, penalty='l1', solver='liblinear')
+['Av. Precision: 82.34758234057462', 'Av. Recall: 87.08314806580701', 'Av. Accuracy: 84.21481481481483', 'Av. F1 Score: 84.64918599625413']
+
+LogisticRegression(C=0.1, penalty='l2', solver='liblinear')
+['Av. Precision: 87.0020063055317', 'Av. Recall: 89.98073217726396', 'Av. Accuracy: 88.27407407407406', 'Av. F1 Score: 88.46630236794171']
+
+LogisticRegression(C=0.1, penalty='l1', solver='saga')
+['Av. Precision: 82.46867358546916', 'Av. Recall: 88.3748332592263', 'Av. Accuracy: 84.80074074074074', 'Av. F1 Score: 85.31966333883405']
+
+LogisticRegression(C=0.1, penalty='l2', solver='saga')
+['Av. Precision: 86.8016310179555', 'Av. Recall: 89.92144656884543', 'Av. Accuracy: 88.1296296296296', 'Av. F1 Score: 88.33400065518872']
+
+
+LogisticRegression(C=0.1, penalty='l2', solver='sag')
+['Av. Precision: 86.864604149636', 'Av. Recall: 89.82510745516525', 'Av. Accuracy: 88.12629629629629', 'Av. F1 Score: 88.3200536128786']

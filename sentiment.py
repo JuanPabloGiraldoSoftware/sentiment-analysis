@@ -24,18 +24,17 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from collections import defaultdict
 from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.feature_extraction.text import  TfidfVectorizer
+from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.linear_model import LogisticRegression, LinearRegression
+from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, mean_absolute_error, mean_squared_error
-
-from sklearn.metrics import roc_curve, auc
 count_progress=1
 len_df=0
 def remove_stopwords(review):
@@ -122,6 +121,7 @@ def print_shape(a,b):
     print("="*30)
     print(b.shape)
 
+
 def print_confm(confm):
     fig, ax = plt.subplots(figsize=(5, 5))
     ax.matshow(confm, cmap=plt.cm.Oranges, alpha=0.3)
@@ -143,6 +143,7 @@ def print_metrics(y_test,y_pred):
     print('Recall: %.3f' % rscore)
     print('Accuracy: %.3f' % ascore)
     print('F1 Score: %.3f' % fscore)
+    return [pscore,rscore,ascore,fscore]
 
 def print_linear_metrics(y_test, y_pred):
     mae = mean_absolute_error(y_test, y_pred) 
@@ -152,10 +153,91 @@ def print_linear_metrics(y_test, y_pred):
     print('Mean Squared Error: %.3f' % mse)
     print('Root Mean Squared Deviation: %.3f' % rmse)
 
+def print_df(df):
+    print(f"Dataframe Shape: {df.shape}")
+    print(f"Positive Class Shape: {df[df['sentiment']==1].shape}")
+    print(f"Negative Class Shape: {df[df['sentiment']==0].shape}")
+
+def logisticreg_hyperparameter_search (x_train_bow,y_train):
+    #Logistic Regression
+    #Hyper-Parameter Optimization
+    std_slc = StandardScaler(with_mean=False)
+
+    logistic_Reg = LogisticRegression()
+    pipe = Pipeline(steps=[('std_slc', std_slc),
+                           ('logistic_Reg', logistic_Reg)])
+    
+    #n_components = list(range(1,x_train_bow.shape[1]+1,1)) #number of components keeped after reducing dimension
+    C = [0.001, 0.01, 0.1] #inverse of regularization strength -> reduce overfiting by reducing the variance
+    solver = ['lbfgs', 'liblinear', 'newton-cg', "saga"] #optimization algorithm 
+    penalty = ['l1', 'l2'] #type of regularization. 
+    parameters = dict(logistic_Reg__C=C,
+                      logistic_Reg__penalty=penalty,
+                      logistic_Reg__solver=solver)
+
+    clf_GSCV= GridSearchCV(pipe, parameters)
+    clf_GSCV.fit(x_train_bow, y_train)
+    print('Best Penalty:', clf_GSCV.best_estimator_.get_params()['logistic_Reg__penalty'])
+    print('Best Solver:', clf_GSCV.best_estimator_.get_params()['logistic_Reg__solver'])
+    print('Best C:', clf_GSCV.best_estimator_.get_params()['logistic_Reg__C'])
+    print(); print(clf_GSCV.best_estimator_.get_params()['logistic_Reg'])
+    
+def logisticreg (x_train_bow,y_train, x_test_bow, y_test ):
+    lgr=LogisticRegression(C=0.1, penalty='l2', solver='sag')
+    lgr.fit(x_train_bow,y_train)
+    y_pred_lgr = lgr.predict(x_test_bow)
+    print("=============LOGISTIC REGRESSION============")
+    metrics=print_metrics(y_test,y_pred_lgr)
+    print("============================================")
+    return metrics
+
+def randomforest (x_train_bow,y_train, x_test_bow, y_test ):
+    #Random Forest
+    rfc=RandomForestClassifier(max_depth=2, random_state=0)
+    rfc.fit(x_train_bow,y_train)
+    y_pred_rfc = rfc.predict(x_test_bow)
+    print("=============RANDOM FOREST============")
+    print_metrics(y_test,y_pred_rfc)
+    print("============================================")   
+
+def knearestneighbors (x_train_bow,y_train, x_test_bow, y_test):
+ #KNearestNeighbors X -> large execution time
+    knn=KNeighborsClassifier(n_jobs=-1)
+    k_range=list(range(1,50))
+    options=['uniform', 'distance']
+    param_grid = dict(n_neighbors=k_range, weights=options)
+    rand_knn = GridSearchCV(knn, param_grid, cv=10, scoring='accuracy', n_iter=10)
+    rand_knn.fit(x_train_bow, y_train)
+    print(rand_knn.best_score_)
+    print(rand_knn.best_params_)
+    confm_knn = confusion_matrix(y_test, y_pred_knn)
+    print_confm(confm_knn)
+    print("=============K NEAREST NEIGHBORS============")
+    print_metrics(y_test,y_pred_knn)
+    print("============================================")
+
+def supportvm (x_train_bow,y_train, x_test_bow, y_test ):
+    #Support Vector Macine  X -> large execution time
+    svc=SVC(C = 100, kernel = 'linear', random_state=123)
+    svc.fit(x_train_bow,y_train)
+    y_pred_svc = svc.predict(x_test_bow)
+    print("=============SUPPORT VECTOR MACHINE============")
+    print_metrics(y_test,y_pred_svc)
+    print("============================================")   
+
+def gaussiannaivebayes (x_train_bow,y_train, y_test, x_test_bow ):
+    #Gaussian Naive Bayes
+    gnbc=GaussianNB()
+    gnbc.fit(x_train_bow.toarray(),y_train)
+    y_pred_gnbc = gnbc.predict(x_test_bow)
+    print("=============GAUSSIAN NAIVE BAYES============")
+    print_metrics(y_test,y_pred_gnbc)
+    print("============================================")  
+
 def training_model():
     df = pd.read_csv("clean_rev_movies.csv")
     print(df.shape)
-    df = df.loc[:40000]
+    #df = df.loc[:40000]
     X=df['review']
     Y=df['sentiment']
     print(X)
@@ -167,69 +249,16 @@ def training_model():
     x_train_bow=vectorizer.fit_transform(x_train)
     x_test_bow=vectorizer.transform(x_test)
     print_shape(x_train_bow,x_test_bow)
+    logisticreg_hyperparameter_search(x_train_bow,y_train)
+    #total=[0,0,0,0]
+    #for i in range(10): 
+    #    metrics=logisticreg(x_train_bow,y_train,x_test_bow,y_test)
+    #    for j in range(len(total)):
+    #        total[j] += metrics[j]
+        
+    #average=[f"Av. Precision: {total[0]/10}",f"Av. Recall: {total[1]/10}",f"Av. Accuracy: {total[2]/10}",f"Av. F1 Score: {total[3]/10}"]
+    #print(average)
 
-    #KNearestNeighbors X -> large execution time
-    #knn=KNeighborsClassifier()
-    #k_range=list(range(1,50))
-    #options=['uniform', 'distance']
-    #param_grid = dict(n_neighbors=k_range, weights=options)
-    #rand_knn = RandomizedSearchCV(knn, param_grid, cv=10, scoring='accuracy', n_iter=10, random_state=0)
-    #rand_knn.fit(x_train_bow, y_train)
-    #print(rand_knn.best_score_)
-    #print(rand_knn.best_params_)
-    #confm_knn = confusion_matrix(y_test, y_pred_knn)
-    #print_confm(confm_knn)
-    #print("=============K NEAREST NEIGHBORS============")
-    #print_metrics(y_test,y_pred_knn)
-    #print("============================================")
-
-    #Logistic Regression
-    lgr=LogisticRegression(random_state=0)
-    lgr.fit(x_train_bow,y_train)
-    y_pred_lgr = lgr.predict(x_test_bow)
-    print("=============LOGISTIC REGRESSION============")
-    print_metrics(y_test,y_pred_lgr)
-    print("============================================")
-
-    #Linear Regression
-    lnr=LinearRegression()
-    lnr.fit(x_train_bow,y_train)
-    y_pred_lnr = lnr.predict(x_test_bow)
-    print("=============LINEAR REGRESSION============")
-    print_linear_metrics(y_test,y_pred_lnr)
-    print("============================================")   
-
-    #Random Forest
-    rfc=RandomForestClassifier(max_depth=2, random_state=0)
-    rfc.fit(x_train_bow,y_train)
-    y_pred_rfc = rfc.predict(x_test_bow)
-    print("=============RANDOM FOREST============")
-    print_metrics(y_test,y_pred_rfc)
-    print("============================================")   
-
-    #Decision Tree
-    dtc=DecisionTreeClassifier()
-    dtc.fit(x_train_bow,y_train)
-    y_pred_dtc = dtc.predict(x_test_bow)
-    print("=============DECISION TREE============")
-    print_metrics(y_test,y_pred_dtc)
-    print("============================================")   
-
-    #Support Vector Macine  X -> large execution time
-    #svc=SVC(C = 100, kernel = 'linear', random_state=123)
-    #svc.fit(x_train_bow,y_train)
-    #y_pred_svc = svc.predict(x_test_bow)
-    #print("=============SUPPORT VECTOR MACHINE============")
-    #print_metrics(y_test,y_pred_svc)
-    #print("============================================")   
-
-    #Gaussian Naive Bayes
-    gnbc=GaussianNB()
-    gnbc.fit(x_train_bow.toarray(),y_train)
-    y_pred_gnbc = gnbc.predict(x_test_bow)
-    print("=============GAUSSIAN NAIVE BAYES============")
-    print_metrics(y_test,y_pred_gnbc)
-    print("============================================")   
 
 def testing_k_neighbors(x_train_bow,y_train,x_test_bow,y_test):
     accuracy_hist = []
@@ -259,5 +288,6 @@ def plot_knn_results():
     
 #plot_knn_results()
 training_model()
-
+df = pd.read_csv("clean_rev_movies.csv")
+print_df(df)
 
