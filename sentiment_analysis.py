@@ -13,11 +13,13 @@
 ###################################################
 import pandas as pd
 from utils.vectorize import default_tfidf_vector
-from classifiers.logisticregression import logisticreg_hyperparameter_search
+from classifiers.logisticregression import logisticreg_hyperparameter_search as lgr_hs
+from classifiers.logisticregression import logisticreg as lgr
 
 def training_model():
     x_train_vec,y_train, x_test_bow, y_test = default_tfidf_vector()
-    logisticreg_hyperparameter_search(x_train_vec,y_train)
+    lgr_hs(x_train_vec,y_train)
+    #lgr(x_train_vec,y_train,x_test_bow,y_test)
 
 training_model()
 

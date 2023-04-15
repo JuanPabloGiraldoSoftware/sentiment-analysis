@@ -13,9 +13,9 @@ def logisticreg_hyperparameter_search (x_train_bow,y_train):
     pipe = Pipeline(steps=[('std_slc', std_slc),
                            ('logistic_reg', logistic_reg)])
     
-    C = [0.001, 0.01, 0.1] #inverse of regularization strength -> reduce overfiting by reducing the variance
-    solver = ['lbfgs', 'liblinear', 'newton-cg'] #optimization algorithm 
-    penalty = ['l1', 'l2'] #type of regularization. 
+    C = [0.001, 0.01, 0.1, 1, 10, 100, 1000] #inverse of regularization strength -> reduce overfiting by reducing the variance
+    solver = ['lbfgs', 'liblinear', 'newton-cg','newton-cholesky','sag','saga'] #optimization algorithm 
+    penalty = [None,'l1', 'l2','elasticnet'] #type of regularization. 
     parameters = dict(logistic_reg__C=C,
                       logistic_reg__penalty=penalty,
                       logistic_reg__solver=solver)
@@ -28,7 +28,7 @@ def logisticreg_hyperparameter_search (x_train_bow,y_train):
     print(); print(clf_gscv.best_estimator_.get_params()['logistic_reg'])
     
 def logisticreg (x_train_bow,y_train, x_test_bow, y_test ):
-    lgr=LogisticRegression(C=0.1, penalty='l2', solver='sag')
+    lgr=LogisticRegression(C=0.1, penalty='l1', solver='liblinear')
     lgr.fit(x_train_bow,y_train)
     y_pred_lgr = lgr.predict(x_test_bow)
     print("=============LOGISTIC REGRESSION============")
