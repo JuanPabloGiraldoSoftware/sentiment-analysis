@@ -13,22 +13,22 @@ def logisticreg_hyperparameter_search (x_train_bow,y_train):
     pipe = Pipeline(steps=[('std_slc', std_slc),
                            ('logistic_reg', logistic_reg)])
     
-    C = [0.001, 0.01, 0.1, 1, 10, 100, 1000] #inverse of regularization strength -> reduce overfiting by reducing the variance
-    solver = ['lbfgs', 'liblinear', 'newton-cg','newton-cholesky','sag','saga'] #optimization algorithm 
-    penalty = [None,'l1', 'l2','elasticnet'] #type of regularization. 
+    C = [0.001, 0.01, 0.1, 1, 10, 100] #inverse of regularization strength -> reduce overfiting by reducing the variance
+    solver = ['lbfgs', 'liblinear', 'newton-cg', 'saga'] #optimization algorithm 
+    penalty = ['none','l1', 'l2'] #type of regularization. 
     parameters = dict(logistic_reg__C=C,
                       logistic_reg__penalty=penalty,
                       logistic_reg__solver=solver)
 
-    clf_gscv= GridSearchCV(pipe, parameters)
-    clf_gscv.fit(x_train_bow, y_train)
-    print('Best Penalty:', clf_gscv.best_estimator_.get_params()['logistic_reg__penalty'])
-    print('Best Solver:', clf_gscv.best_estimator_.get_params()['logistic_reg__solver'])
-    print('Best C:', clf_gscv.best_estimator_.get_params()['logistic_reg__C'])
-    print(); print(clf_gscv.best_estimator_.get_params()['logistic_reg'])
+    grid_search= GridSearchCV(pipe, parameters)
+    grid_search.fit(x_train_bow, y_train)
+    print('Best Penalty:', grid_search.best_estimator_.get_params()['logistic_reg__penalty'])
+    print('Best Solver:', grid_search.best_estimator_.get_params()['logistic_reg__solver'])
+    print('Best C:', grid_search.best_estimator_.get_params()['logistic_reg__C'])
+    print(); print(grid_search.best_estimator_.get_params()['logistic_reg'])
     
 def logisticreg (x_train_bow,y_train, x_test_bow, y_test ):
-    lgr=LogisticRegression(C=0.1, penalty='l1', solver='liblinear')
+    lgr=LogisticRegression(C=1, penalty='l1', solver='liblinear')
     lgr.fit(x_train_bow,y_train)
     y_pred_lgr = lgr.predict(x_test_bow)
     print("=============LOGISTIC REGRESSION============")

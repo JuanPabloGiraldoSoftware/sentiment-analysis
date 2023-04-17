@@ -1,0 +1,76 @@
+LOGISTIC REGRESSION PARAM SEARCH
+
+@param-grid
+C = [0.001, 0.01, 0.1, 1, 10, 100] #inverse of regularization strength -> reduce overfiting by reducing the variance
+solver = ['lbfgs', 'liblinear', 'newton-cg', 'saga'] #optimization algorithm 
+penalty = ['none','l1', 'l2'] #type of regularization. 
+
+@results
+Best Penalty: l1
+Best Solver: liblinear
+Best C: 1
+
+LogisticRegression(C=1, penalty='l1', solver='liblinear')
+
+METRICS
+Precision: 88.606
+Recall: 90.826
+Accuracy: 89.578
+F1 Score: 89.702
+===============================================================================================================
+KNEAREST NEIGHBORS PARAM SEARCH
+
+@param-grid
+'n_neighbors': [5, 7, 10, 15],
+'weights': ['uniform', 'distance']
+
+@results
+Best N. Neighbors: 10
+Best Weights: distance
+
+KNeighborsClassifier(n_neighbors=10, weights='uniform')
+
+METRICS
+Precision: 79.533
+Recall: 83.482
+Accuracy: 81.007
+F1 Score: 81.459
+
+===============================================================================================================
+RANDOM FOREST PARAM SEARCH
+
+@param-grid
+'n_estimators': [25, 50, 75, 100, 125, 150, 175, 200]
+'max_depth': [10, 20, 30]
+'min_samples_split': [2, 5, 10]
+'min_samples_leaf': [1, 2, 4]
+
+
+@results
+Best N. Max Depth: 30
+Best Min Samples Leaf: 1
+Best Min Samples Split: 2
+Best N Estimators: 200
+
+RandomForestClassifier(max_depth=30, random_state=42,min_samples_leaf=1, min_samples_split=2, n_estimators=200)
+
+METRICS
+Precision: 90.009
+Recall: 93.538
+Accuracy: 91.581
+F1 Score: 91.740
+
+===============================================================================================================
+SUPPORT VECTOR MACHINE PARAM SEARCH
+
+@param-grid
+'C': [0.1, 1, 10],
+'gamma': [0.1, 1, 10],
+'kernel': ['linear', 'rbf', 'sigmoid']
+
+@results
+Best C: 1
+Best Gamma: 0.1
+Best Kernel: rbf
+
+SVC(C = 1, kernel = 'rbf', gamma = 0.1, random_state=42)

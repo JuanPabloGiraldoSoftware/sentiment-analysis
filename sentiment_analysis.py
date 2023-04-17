@@ -11,15 +11,34 @@
 ###################################################
 #          libraries and external functions       #
 ###################################################
-import pandas as pd
 from utils.vectorize import default_tfidf_vector
 from classifiers.logisticregression import logisticreg_hyperparameter_search as lgr_hs
 from classifiers.logisticregression import logisticreg as lgr
+from classifiers.knearestneighbors import knearestneighbors as knn
+from classifiers.knearestneighbors import knearestneighbors_hyperparameter_search as knn_hs
+from classifiers.randomforest import randomforest as rfc
+from classifiers.randomforest import randomforest_hyperparamter_search as rfc_hs
+from classifiers.supportvm import supportvm as svm
+from classifiers.supportvm import supportvm_hyperparameter_search as svm_hs
 
-def training_model():
-    x_train_vec,y_train, x_test_bow, y_test = default_tfidf_vector()
-    lgr_hs(x_train_vec,y_train)
-    #lgr(x_train_vec,y_train,x_test_bow,y_test)
+def train_models():
+    x_train_vec,y_train, x_test_vec, y_test = default_tfidf_vector()
+    
+    #Logistec Regression Classifier
+    #Best Params --> Best Penalty: l1 | Best Solver: liblinear | Best C: 1
+    #lgr_hs(x_train_vec,y_train)
+    #lgr(x_train_vec,y_train,x_test_vec,y_test)
+    
+    #K-Nearest Neighbors Classifier
+    #knn_hs(x_train_vec,y_train)
+    #knn(x_train_vec, y_train, x_test_vec, y_test)
+    
+    #Random Forest Classifier
+    #rfc_hs(x_train_vec,y_train)
+    #rfc(x_train_vec, y_train, x_test_vec, y_test)
+    
+    #Support Vector Machine
+    #svm_hs(x_train_vec,y_train)
+    svm(x_train_vec, y_train, x_test_vec, y_test)
 
-training_model()
-
+train_models()

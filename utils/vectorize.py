@@ -14,9 +14,6 @@ def default_tfidf_vector():
     print(df.shape)
     X=df['review']
     Y=df['sentiment']
-    print(X)
-    print(Y)
-    print("###################################################")
     vectorizer = TfidfVectorizer()
     x_train, x_test, y_train, y_test = train_test_split(X,Y,stratify=Y, test_size=0.30)
     print_shape(x_train,x_test)

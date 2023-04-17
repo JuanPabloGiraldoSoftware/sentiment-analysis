@@ -2,13 +2,23 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 from utils.visualization import print_metrics
 
-def knearestneighbors (x_train_bow,y_train):
+def knearestneighbors_hyperparameter_search (x_train_bow,y_train):
  #KNearestNeighbors X -> large execution time
     knn=KNeighborsClassifier(n_jobs=-1)
-    k_range=list(range(1,50))
-    options=['uniform', 'distance']
-    param_grid = dict(n_neighbors=k_range, weights=options)
-    rand_knn = GridSearchCV(knn, param_grid, cv=10, scoring='accuracy', n_iter=10)
-    rand_knn.fit(x_train_bow, y_train)
-    print(rand_knn.best_score_)
-    print(rand_knn.best_params_)
+    param_grid = {
+      'n_neighbors': [5, 7, 10, 15],
+      'weights': ['uniform', 'distance']
+    }
+    grid_search = GridSearchCV(knn, param_grid, cv=5,scoring='accuracy')
+    grid_search.fit(x_train_bow, y_train)
+    print(grid_search.best_score_)
+    print(grid_search.best_params_)
+    
+def knearestneighbors(x_train_bow,y_train, x_test_bow, y_test):
+   knn=KNeighborsClassifier(n_neighbors=10, weights='uniform')
+   knn.fit(x_train_bow, y_train)
+   y_pred_knn = knn.predict(x_test_bow)
+   print("=============K-NEAREST NEIGHBORS============")
+   metrics=print_metrics(y_test,y_pred_knn)
+   print("============================================")
+   
