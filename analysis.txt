@@ -74,3 +74,9 @@ Best Gamma: 0.1
 Best Kernel: rbf
 
 SVC(C = 1, kernel = 'rbf', gamma = 0.1, random_state=42)
+
+METRICS
+Precision: 89.794
+Recall: 92.515
+Accuracy: 91.004
+F1 Score: 91.134
