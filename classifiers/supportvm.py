@@ -3,15 +3,13 @@ from sklearn.model_selection import GridSearchCV
 from utils.visualization import print_metrics
 
 def supportvm_hyperparameter_search(x_train_bow,y_train):
-    svm = SVC()
+    svm = SVC(kernel='rbf', C=1)
 
     param_grid = {
-        'C': [0.1, 1, 10],
-        'gamma': [0.1, 1, 10],
-        'kernel': ['linear', 'rbf', 'sigmoid']
+        'gamma': [0.0001,0.001,0.01,0.1, 1],
     }
 
-    grid_search = GridSearchCV(svm, param_grid=param_grid, cv=5, n_jobs=-1)
+    grid_search = GridSearchCV(svm, param_grid=param_grid, cv=5, n_jobs=-1,scoring='accuracy')
     grid_search.fit(x_train_bow, y_train)
     print(grid_search.best_score_)
     print(grid_search.best_params_)

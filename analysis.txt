@@ -113,6 +113,20 @@ Recall: 93.538
 Accuracy: 91.581
 F1 Score: 91.740
 
+SECOND VALIDATION
+'n_estimators': [300, 400, 450, 500, 550, 600],
+'max_depth': [50, 60, 70, 80, 90, 100],
+
+@results
+Best N. Max Depth: 400
+Best N Estimators: 60
+
+METRICS:
+Precision: 93.137
+Recall: 94.938
+Accuracy: 93.974
+F1 Score: 94.029
+
 ===============================================================================================================
 SUPPORT VECTOR MACHINE PARAM SEARCH
 
@@ -133,3 +147,30 @@ Precision: 89.794
 Recall: 92.515
 Accuracy: 91.004
 F1 Score: 91.134
+
+
+
+Metricas finales tras busqueda de hiperparámetros. 
+
+=============LOGISTIC REGRESSION============
+Precision: 88.957
+Recall: 91.693
+Accuracy: 90.159
+F1 Score: 90.304
+============================================
+=============K-NEAREST NEIGHBORS============
+Precision: 78.636
+F1 Score: 80.293
+============================================
+=============RANDOM FOREST============
+Precision: 93.666
+Recall: 94.909
+Accuracy: 94.248
+F1 Score: 94.284
+============================================
+=============SUPPORT VECTOR MACHINE============
+Precision: 88.832
+Recall: 92.019
+Accuracy: 90.230
+F1 Score: 90.397
+============================================

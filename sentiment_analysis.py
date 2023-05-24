@@ -20,25 +20,28 @@ from classifiers.randomforest import randomforest as rfc
 from classifiers.randomforest import randomforest_hyperparamter_search as rfc_hs
 from classifiers.supportvm import supportvm as svm
 from classifiers.supportvm import supportvm_hyperparameter_search as svm_hs
+from DeepL.rnn_template import rnn_network
 
 def train_models():
-    x_train_vec,y_train, x_test_vec, y_test = default_tfidf_vector()
+    x_train_vec,y_train, x_test_vec, y_test = default_tfidf_vector(10000)
     
     #Logistec Regression Classifier
-    #Best Params --> Best Penalty: l1 | Best Solver: liblinear | Best C: 1
     #lgr_hs(x_train_vec,y_train)
-    #lgr(x_train_vec,y_train,x_test_vec,y_test)
+    lgr(x_train_vec,y_train,x_test_vec,y_test)
     
     #K-Nearest Neighbors Classifier
     #knn_hs(x_train_vec,y_train)
-    #knn(x_train_vec, y_train, x_test_vec, y_test)
+    knn(x_train_vec, y_train, x_test_vec, y_test)
     
     #Random Forest Classifier
     #rfc_hs(x_train_vec,y_train)
-    #rfc(x_train_vec, y_train, x_test_vec, y_test)
+    rfc(x_train_vec, y_train, x_test_vec, y_test)
     
     #Support Vector Machine
     #svm_hs(x_train_vec,y_train)
     svm(x_train_vec, y_train, x_test_vec, y_test)
+
+    #rnn_network(x_train_vec, y_train, x_test_vec, y_test)
+
 
 train_models()

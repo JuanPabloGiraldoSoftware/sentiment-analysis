@@ -20,7 +20,7 @@ def logisticreg_hyperparameter_search (x_train_bow,y_train):
                       logistic_reg__penalty=penalty,
                       logistic_reg__solver=solver)
 
-    grid_search= GridSearchCV(pipe, parameters)
+    grid_search= GridSearchCV(pipe, parameters,cv=5,scoring='accuracy')
     grid_search.fit(x_train_bow, y_train)
     print('Best Penalty:', grid_search.best_estimator_.get_params()['logistic_reg__penalty'])
     print('Best Solver:', grid_search.best_estimator_.get_params()['logistic_reg__solver'])
