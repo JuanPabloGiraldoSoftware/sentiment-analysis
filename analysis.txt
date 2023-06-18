@@ -153,24 +153,26 @@ F1 Score: 91.134
 Metricas finales tras busqueda de hiperparámetros. 
 
 =============LOGISTIC REGRESSION============
-Precision: 88.957
-Recall: 91.693
-Accuracy: 90.159
-F1 Score: 90.304
+Precision: 89.246
+Recall: 91.144
+Accuracy: 90.085
+F1 Score: 90.185
 ============================================
 =============K-NEAREST NEIGHBORS============
-Precision: 78.636
-F1 Score: 80.293
+Precision: 78.646
+Recall: 81.118
+Accuracy: 79.556
+F1 Score: 79.863
 ============================================
 =============RANDOM FOREST============
-Precision: 93.666
-Recall: 94.909
-Accuracy: 94.248
-F1 Score: 94.284
+Precision: 93.341
+Recall: 95.353
+Accuracy: 94.278
+F1 Score: 94.336
 ============================================
 =============SUPPORT VECTOR MACHINE============
-Precision: 88.832
-Recall: 92.019
-Accuracy: 90.230
-F1 Score: 90.397
+Precision: 89.154
+Recall: 91.618
+Accuracy: 90.241
+F1 Score: 90.370
 ============================================

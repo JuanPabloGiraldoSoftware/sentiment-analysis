@@ -12,6 +12,7 @@
 #          libraries and external functions       #
 ###################################################
 from utils.vectorize import default_tfidf_vector
+from utils.preprocessing import build_datasets
 from classifiers.logisticregression import logisticreg_hyperparameter_search as lgr_hs
 from classifiers.logisticregression import logisticreg as lgr
 from classifiers.knearestneighbors import knearestneighbors as knn
@@ -22,9 +23,11 @@ from classifiers.supportvm import supportvm as svm
 from classifiers.supportvm import supportvm_hyperparameter_search as svm_hs
 from DeepL.rnn_template import rnn_network
 
+
+#build_datasets()
+
 def train_models():
     x_train_vec,y_train, x_test_vec, y_test = default_tfidf_vector(10000)
-    
     #Logistec Regression Classifier
     #lgr_hs(x_train_vec,y_train)
     lgr(x_train_vec,y_train,x_test_vec,y_test)

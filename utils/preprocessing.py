@@ -36,14 +36,15 @@ def stem(review):
 
 def build_datasets():
     global len_df, count_progress
-    df = pd.read_csv(f'../datasets/{RAW_DATA_SET}')
+    df = pd.read_csv(f'./datasets/{RAW_DATA_SET}')
     print(df['sentiment'])
     df['sentiment'] = df['sentiment'].apply(lambda row: 1 if row=='positive' else 0)
     len_df=df.shape[0]
     print(df['sentiment'])
     print(df['review'])
     df['review']=df.apply(lambda row: re.sub(r'(<[\w\s]*/?>)',"",row['review']), axis=1)
-    df['review']=df.apply(lambda row: re.sub(r'[^a-zA-Z0-9\s]+', '', row['review']), axis=1)
+    #df['review']=df.apply(lambda row: re.sub(r'[^a-zA-Z0-9\s]+', '', row['review']), axis=1)
+    df['review'] = df.apply(lambda row: re.sub(r'[^a-zA-Z\s]+', '', row['review']), axis=1)
     print(df['review'])
     df['review']=df.apply(lambda row: remove_stopwords(row['review']), axis=1)
     count_progress=1
