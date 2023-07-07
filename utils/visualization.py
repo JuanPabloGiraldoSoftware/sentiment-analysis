@@ -11,6 +11,15 @@ def print_shape(a,b):
     print("="*30)
     print(b.shape)
 
+def print_bal_class(tag,Y):
+   print(f'{tag}:{Y.value_counts()}')
+
+def print_average_length(tag, X):
+    len_acc = 0
+    for text in X:
+        len_acc+=len(text.split(" "))
+    print(f'{tag}:{len_acc/len(X)}')
+
 def print_metrics(y_test,y_pred):
     pscore = precision_score(y_test, y_pred)*100
     rscore = recall_score(y_test, y_pred)*100

@@ -176,3 +176,11 @@ Recall: 91.618
 Accuracy: 90.241
 F1 Score: 90.370
 ============================================
+
+
+Data Statistics
+negative    45019
+positive    44981
+Name: sentiment, dtype: int64
+RAW DATASET AVLEN::231
+CLEAN DATASET AVLEN::130
