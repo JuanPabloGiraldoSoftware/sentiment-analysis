@@ -10,7 +10,9 @@
 ###################################################
 #          libraries and external functions       #
 ###################################################
+from utils.constants import CLEAN_DATA_SET
 from utils.vectorize import default_tfidf_vector
+from utils.vectorize import read_dataset
 from classifiers.logisticregression import logisticreg_hyperparameter_search as lgr_hs
 from classifiers.logisticregression import logisticreg as lgr
 from classifiers.knearestneighbors import knearestneighbors as knn
@@ -19,17 +21,17 @@ from classifiers.randomforest import randomforest as rfc
 from classifiers.randomforest import randomforest_hyperparamter_search as rfc_hs
 from classifiers.supportvm import supportvm as svm
 from classifiers.supportvm import supportvm_hyperparameter_search as svm_hs
-from DeepL.rnn_template import rnn_network
+from DeepL.rnn_template import rnn_network_vect_layer, rnn_network_first_vect
 
 
 #build_datasets()
 
 def train_models():
 
-    x_train_vec,y_train, x_test_vec, y_test = default_tfidf_vector(10000)
+    #x_train_vec,y_train, x_test_vec, y_test = default_tfidf_vector(10000)
     #Logistec Regression Classifier
     #lgr_hs(x_train_vec,y_train)
-   # lgr(x_train_vec,y_train,x_test_vec,y_test)
+    #lgr(x_train_vec,y_train,x_test_vec,y_test)
     
     #K-Nearest Neighbors Classifier
     #knn_hs(x_train_vec,y_train)
@@ -43,7 +45,10 @@ def train_models():
     #svm_hs(x_train_vec,y_train)
     #svm(x_train_vec, y_train, x_test_vec, y_test)
 
-    rnn_network(x_train_vec, y_train, x_test_vec, y_test)
+    df_clean = read_dataset(CLEAN_DATA_SET)
+    max_features = 10000
+    padding_len = 650
+    rnn_network_first_vect(df_clean, max_features,padding_len)
 
 
 train_models()

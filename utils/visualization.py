@@ -14,10 +14,18 @@ def print_shape(a,b):
 def print_bal_class(tag,Y):
    print(f'{tag}:{Y.value_counts()}')
 
-def print_average_length(tag, X):
+def print_average_word_length(tag, X):
     len_acc = 0
     for text in X:
         len_acc+=len(text.split(" "))
+    print(f'{tag}:{len_acc/len(X)}')
+
+def print_average_char_length(tag, X):
+    len_acc = 0
+    for text in X:
+        dx = text.split(" ")
+        for rev in dx:
+            len_acc+=len(rev)
     print(f'{tag}:{len_acc/len(X)}')
 
 def print_metrics(y_test,y_pred):

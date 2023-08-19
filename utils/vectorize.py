@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.feature_extraction.text import  TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from utils.constants import CLEAN_DATA_SET, RAW_DATA_SET
-from utils.visualization import print_shape, print_average_length, print_bal_class
+from utils.visualization import print_shape, print_average_word_length,print_average_char_length, print_bal_class
 
 
 def read_dataset(path):
@@ -16,8 +16,10 @@ def corpus_statics():
     df_clean =  read_dataset (CLEAN_DATA_SET)
 
     print_bal_class('Balance',df_raw["sentiment"])
-    print_average_length('RAW DATASET AVLEN:', df_raw['review'])
-    print_average_length('CLEAN DATASET AVLEN:',df_clean['review'])
+    print_average_word_length('RAW DATASET AV. WORD LEN:', df_raw['review'])
+    print_average_word_length('CLEAN DATASET AV. WORD LEN:',df_clean['review'])
+    print_average_char_length('RAW DATASET AV. CHAR LEN:', df_raw['review'])
+    print_average_char_length('CLEAN DATASET AV. CHAR LEN:',df_clean['review'])
     
 
 def default_tfidf_vector(max_features=None):
@@ -34,12 +36,4 @@ def default_tfidf_vector(max_features=None):
     x_test_bow = vectorizer.transform(x_test)
     print_shape(x_train_bow, x_test_bow)
 
-    # Convertir las matrices dispersas en matrices densas
-    x_train_bow = x_train_bow.toarray()
-    x_test_bow = x_test_bow.toarray()
-
-    # Remodelar las matrices para que tengan la forma adecuada
-    x_train_vec = np.reshape(x_train_bow, (x_train_bow.shape[0], x_train_bow.shape[1], 1))
-    x_test_vec = np.reshape(x_test_bow, (x_test_bow.shape[0], x_test_bow.shape[1], 1))
-
-    return x_train_vec, y_train, x_test_vec, y_test
+    return x_train_bow, y_train, x_test_bow, y_test
