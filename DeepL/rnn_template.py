@@ -2,7 +2,7 @@ from sklearn.model_selection import train_test_split
 
 import tensorflow as tf
 from keras.models import Sequential
-from keras.layers import  Dense, Embedding, LSTM, Dropout, TextVectorization, Input
+from keras.layers import  Dense, Embedding, LSTM, Dropout, TextVectorization, Input, Bidirectional
 from keras.utils import pad_sequences
 from keras.preprocessing.text import Tokenizer 
 from keras.callbacks import EarlyStopping
@@ -25,7 +25,7 @@ def rnn_network_vect_layer(df_rev, max_features, padding_len):
   model.add(Input(shape=(1,),dtype=tf.string))
   model.add(vect_layer)
   model.add(Embedding(max_features, 128, input_length=padding_len))
-  model.add(LSTM(128))
+  model.add(Bidirectional(LSTM(128)))
   model.add(Dropout(0.5))
   model.add(Dense(1, activation='sigmoid'))
   model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -63,12 +63,12 @@ def rnn_network_first_vect(df_rev, max_features, padding_len):
   vx_test_pad = pad_sequences(x_test_vec, maxlen=padding_len)
 
   #EarlyStopping
-  callback = EarlyStopping(monitor='val_accuracy', patience=5)
+  callback = EarlyStopping(monitor='val_accuracy', patience=4, mode="max")
 
   #Building Model
   model = Sequential()
   model.add(Embedding(vocab_size, 128, input_length=padding_len))
-  model.add(LSTM(128))
+  model.add(Bidirectional(LSTM(128)))
   model.add(Dense(64, activation='sigmoid'))
   model.add(Dropout(0.5))
   model.add(Dense(1, activation='sigmoid'))
@@ -85,3 +85,4 @@ def rnn_network_first_vect(df_rev, max_features, padding_len):
   print("Training Accuracy: {:.4f}".format(accuracy))
   loss, accuracy = model.evaluate(vx_test_pad, y_test, verbose=False)
   print("Testing Accuracy:  {:.4f}".format(accuracy))
+  model.save("rnn_network.keras")

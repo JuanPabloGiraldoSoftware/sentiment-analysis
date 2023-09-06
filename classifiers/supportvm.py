@@ -1,6 +1,7 @@
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
 from utils.visualization import print_metrics
+from joblib import dump, load
 
 def supportvm_hyperparameter_search(x_train_bow,y_train):
     svm = SVC(kernel='rbf', C=1)
@@ -21,4 +22,5 @@ def supportvm (x_train_bow,y_train, x_test_bow, y_test ):
     y_pred_svc = svc.predict(x_test_bow)
     print("=============SUPPORT VECTOR MACHINE============")
     print_metrics(y_test,y_pred_svc)
-    print("============================================")   
+    print("============================================")
+    dump(svc,"svcmodel.joblib")   

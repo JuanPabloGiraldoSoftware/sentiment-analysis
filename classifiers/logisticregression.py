@@ -3,6 +3,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from utils.visualization import print_metrics
+from joblib import dump, load
 
 def logisticreg_hyperparameter_search (x_train_bow,y_train):
     #Logistic Regression
@@ -34,4 +35,5 @@ def logisticreg (x_train_bow,y_train, x_test_bow, y_test ):
     print("=============LOGISTIC REGRESSION============")
     metrics=print_metrics(y_test,y_pred_lgr)
     print("============================================")
+    dump(lgr,"lgrmodel.joblib")
     return metrics

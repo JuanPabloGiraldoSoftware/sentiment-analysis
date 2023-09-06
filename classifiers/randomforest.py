@@ -2,6 +2,7 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 from utils.visualization import print_metrics
+from joblib import dump, load
 
 def randomforest_hyperparamter_search(x_train_bow, y_train):
     rfc = RandomForestClassifier(random_state=4)
@@ -25,4 +26,6 @@ def randomforest (x_train_bow,y_train, x_test_bow, y_test ):
     y_pred_rfc = rfc.predict(x_test_bow)
     print("=============RANDOM FOREST============")
     print_metrics(y_test,y_pred_rfc)
-    print("============================================")   
+    print("============================================")
+    dump(rfc,"rfcmodel.joblib")
+       

@@ -1,6 +1,7 @@
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 from utils.visualization import print_metrics
+from joblib import dump, load
 
 def knearestneighbors_hyperparameter_search (x_train_bow,y_train):
  #KNearestNeighbors X -> large execution time
@@ -21,4 +22,6 @@ def knearestneighbors(x_train_bow,y_train, x_test_bow, y_test):
    print("=============K-NEAREST NEIGHBORS============")
    metrics=print_metrics(y_test,y_pred_knn)
    print("============================================")
-   
+   dump(knn,"knnmodel.joblib")
+    
+  

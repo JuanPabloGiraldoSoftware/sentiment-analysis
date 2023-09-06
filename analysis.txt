@@ -407,7 +407,7 @@ Testing Accuracy:  0.9170
 
 
 
-EarlyStop?
+EarlyStop?, patience 5,val_accuracy
 Epoch 1/20
 50/50 [==============================] - 1751s 35s/step - loss: 0.6713 - accuracy: 0.5891 - val_loss: 0.4388 - val_accuracy: 0.8153
 Epoch 2/20
@@ -443,3 +443,46 @@ Epoch 18/20
 50/50 [==============================] - 5232s 105s/step - loss: 0.2436 - accuracy: 0.9197 - val_loss: 0.2702 - val_accuracy: 0.9030
 Training Accuracy: 0.9394
 Testing Accuracy:  0.8996
+
+
+
+Bidirectional LSTM
+EarlyStop patience 5, val_accuracy
+Epoch 1/20
+50/50 [==============================] - 2075s 42s/step - loss: 0.6890 - accuracy: 0.5830 - val_loss: 0.6160 - val_accuracy: 0.7382
+Epoch 2/20
+50/50 [==============================] - 4251s 85s/step - loss: 0.3847 - accuracy: 0.8390 - val_loss: 0.2693 - val_accuracy: 0.8949
+Epoch 3/20
+50/50 [==============================] - 5054s 101s/step - loss: 0.2263 - accuracy: 0.9212 - val_loss: 0.2403 - val_accuracy: 0.9077
+Epoch 4/20
+50/50 [==============================] - 5305s 106s/step - loss: 0.1729 - accuracy: 0.9442 - val_loss: 0.2362 - val_accuracy: 0.9171
+Epoch 5/20
+50/50 [==============================] - 5339s 107s/step - loss: 0.1464 - accuracy: 0.9544 - val_loss: 0.2360 - val_accuracy: 0.9174
+Epoch 6/20
+50/50 [==============================] - 5349s 107s/step - loss: 0.1216 - accuracy: 0.9638 - val_loss: 0.2595 - val_accuracy: 0.9202
+Epoch 7/20
+50/50 [==============================] - 5365s 107s/step - loss: 0.1052 - accuracy: 0.9700 - val_loss: 0.2673 - val_accuracy: 0.9202
+Epoch 8/20
+50/50 [==============================] - 5398s 108s/step - loss: 0.1031 - accuracy: 0.9696 - val_loss: 0.2592 - val_accuracy: 0.9194
+Epoch 9/20
+50/50 [==============================] - 5392s 108s/step - loss: 0.0975 - accuracy: 0.9717 - val_loss: 0.2685 - val_accuracy: 0.9253
+Epoch 10/20
+50/50 [==============================] - 5396s 108s/step - loss: 0.0849 - accuracy: 0.9765 - val_loss: 0.2720 - val_accuracy: 0.9252
+Epoch 11/20
+50/50 [==============================] - 5395s 108s/step - loss: 0.0842 - accuracy: 0.9763 - val_loss: 0.2854 - val_accuracy: 0.9033
+Epoch 12/20
+50/50 [==============================] - 5411s 108s/step - loss: 0.1147 - accuracy: 0.9627 - val_loss: 0.2540 - val_accuracy: 0.9278
+Epoch 13/20
+50/50 [==============================] - 5418s 108s/step - loss: 0.0785 - accuracy: 0.9783 - val_loss: 0.2605 - val_accuracy: 0.9277
+Epoch 14/20
+50/50 [==============================] - 5432s 109s/step - loss: 0.0616 - accuracy: 0.9852 - val_loss: 0.2818 - val_accuracy: 0.9309
+Epoch 15/20
+50/50 [==============================] - 5434s 109s/step - loss: 0.0586 - accuracy: 0.9859 - val_loss: 0.3177 - val_accuracy: 0.9060
+Epoch 16/20
+50/50 [==============================] - 5430s 109s/step - loss: 0.0652 - accuracy: 0.9827 - val_loss: 0.3338 - val_accuracy: 0.9227
+Epoch 17/20
+50/50 [==============================] - 5431s 109s/step - loss: 0.0833 - accuracy: 0.9760 - val_loss: 0.2687 - val_accuracy: 0.9289
+Epoch 18/20
+50/50 [==============================] - 5427s 109s/step - loss: 0.0507 - accuracy: 0.9882 - val_loss: 0.2978 - val_accuracy: 0.9298
+Training Accuracy: 0.9796
+Testing Accuracy:  0.9311
