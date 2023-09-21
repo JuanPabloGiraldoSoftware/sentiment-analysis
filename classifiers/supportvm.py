@@ -17,10 +17,11 @@ def supportvm_hyperparameter_search(x_train_bow,y_train):
 
 def supportvm (x_train_bow,y_train, x_test_bow, y_test ):
     #Support Vector Macine  X -> large execution time
-    svc=SVC(C = 1, kernel = 'rbf', gamma = 0.1, random_state=42)
+    #svc=SVC(C = 1, kernel = 'rbf', gamma = 0.1, random_state=42)
+    svc=load("models/svcmodel.joblib")
     svc.fit(x_train_bow,y_train)
     y_pred_svc = svc.predict(x_test_bow)
     print("=============SUPPORT VECTOR MACHINE============")
     print_metrics(y_test,y_pred_svc)
     print("============================================")
-    dump(svc,"svcmodel.joblib")   
+    #dump(svc,"svcmodel.joblib")   

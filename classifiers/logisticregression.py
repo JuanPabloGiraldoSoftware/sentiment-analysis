@@ -29,11 +29,12 @@ def logisticreg_hyperparameter_search (x_train_bow,y_train):
     print(); print(grid_search.best_estimator_.get_params()['logistic_reg'])
     
 def logisticreg (x_train_bow,y_train, x_test_bow, y_test ):
-    lgr=LogisticRegression(C=1, penalty='l1', solver='liblinear')
+    #lgr=LogisticRegression(C=1, penalty='l1', solver='liblinear')
+    lgr=load("models/lgrmodel.joblib")
     lgr.fit(x_train_bow,y_train)
     y_pred_lgr = lgr.predict(x_test_bow)
     print("=============LOGISTIC REGRESSION============")
     metrics=print_metrics(y_test,y_pred_lgr)
     print("============================================")
-    dump(lgr,"lgrmodel.joblib")
+    #dump(lgr,"lgrmodel.joblib")
     return metrics

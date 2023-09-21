@@ -21,11 +21,12 @@ def randomforest_hyperparamter_search(x_train_bow, y_train):
 
 def randomforest (x_train_bow,y_train, x_test_bow, y_test ):
     #Random Forest
-    rfc=RandomForestClassifier(max_depth=60, random_state=42,min_samples_leaf=1, min_samples_split=2, n_estimators=400)
+    #rfc=RandomForestClassifier(max_depth=60, random_state=42,min_samples_leaf=1, min_samples_split=2, n_estimators=400)
+    rfc=load("models/rfcmodel.joblib")
     rfc.fit(x_train_bow,y_train)
     y_pred_rfc = rfc.predict(x_test_bow)
     print("=============RANDOM FOREST============")
     print_metrics(y_test,y_pred_rfc)
     print("============================================")
-    dump(rfc,"rfcmodel.joblib")
+    #dump(rfc,"rfcmodel.joblib")
        
