@@ -31,24 +31,24 @@ def train_models():
     x_train_vec,y_train, x_test_vec, y_test = default_tfidf_vector(10000)
     #Logistec Regression Classifier
     #lgr_hs(x_train_vec,y_train)
-    lgr(x_train_vec,y_train,x_test_vec,y_test)
+    #lgr(x_train_vec,y_train,x_test_vec,y_test)
     
     #K-Nearest Neighbors Classifier
     #knn_hs(x_train_vec,y_train)
-    knn(x_train_vec, y_train, x_test_vec, y_test)
+    #knn(x_train_vec, y_train, x_test_vec, y_test)
     
     #Random Forest Classifier
     #rfc_hs(x_train_vec,y_train)
-    rfc(x_train_vec, y_train, x_test_vec, y_test)
+    #rfc(x_train_vec, y_train, x_test_vec, y_test)
     
     #Support Vector Machine
     #svm_hs(x_train_vec,y_train)
-    svm(x_train_vec, y_train, x_test_vec, y_test)
+    #svm(x_train_vec, y_train, x_test_vec, y_test)
 
     df_clean = read_dataset(CLEAN_DATA_SET)
     max_features = 10000
     padding_len = 650
-    #rnn_network_first_vect(df_clean, max_features,padding_len)
+    rnn_network_first_vect(df_clean, max_features,padding_len)
 
 
 train_models()

@@ -6,6 +6,29 @@ from keras.layers import  Dense, Embedding, LSTM, Dropout, TextVectorization, In
 from keras.utils import pad_sequences
 from keras.preprocessing.text import Tokenizer 
 from keras.callbacks import EarlyStopping
+from keras import backend as K
+
+
+#Implementing aditional metrics (could be missleading since training occurs in batches but it works on binary classification)
+
+def recall_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (possible_positives + K.epsilon())
+    return recall
+
+def precision_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    return precision
+
+def f1_m(y_true, y_pred):
+    precision = precision_m(y_true, y_pred)
+    recall = recall_m(y_true, y_pred)
+    return 2*((precision*recall)/(precision+recall+K.epsilon()))
+
+
 
 def rnn_network_vect_layer(df_rev, max_features, padding_len):
   X = df_rev["review"]
@@ -72,7 +95,7 @@ def rnn_network_first_vect(df_rev, max_features, padding_len):
   model.add(Dense(64, activation='sigmoid'))
   model.add(Dropout(0.5))
   model.add(Dense(1, activation='sigmoid'))
-  model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+  model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy', f1_m, precision_m, recall_m])
 
   ## Hyperparameters
   batch_size = 1024
@@ -81,8 +104,15 @@ def rnn_network_first_vect(df_rev, max_features, padding_len):
   
   #Model Checking
   model.fit(vx_train_pad, y_train,validation_split= val_split, epochs=epochs, batch_size=batch_size, callbacks=[callback])
-  loss, accuracy = model.evaluate(vx_train_pad, y_train, verbose=False)
+  loss, accuracy, f1_score, precision, recall = model.evaluate(vx_train_pad, y_train, verbose=False)
   print("Training Accuracy: {:.4f}".format(accuracy))
-  loss, accuracy = model.evaluate(vx_test_pad, y_test, verbose=False)
-  print("Testing Accuracy:  {:.4f}".format(accuracy))
+  print("Training F1 Score: {:.4f}".format(f1_score))
+  print("Training Precision: {:.4f}".format(precision))
+  print("Training Recall: {:.4f}".format(recall))
+  
+  loss, accuracy, f1_score, precision, recall = model.evaluate(vx_test_pad, y_test, verbose=False)
+  print("Testing Accuracy: {:.4f}".format(accuracy))
+  print("Testing F1 Score: {:.4f}".format(f1_score))
+  print("Testing Precision: {:.4f}".format(precision))
+  print("Testing Recall: {:.4f}".format(recall))
   model.save("rnn_network.keras")

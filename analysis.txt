@@ -165,7 +165,7 @@ Accuracy: 79.556
 F1 Score: 79.863
 ============================================
 =============RANDOM FOREST============
-Precision: 93.341
+Precision: 93.341-.q    
 Recall: 95.353
 Accuracy: 94.278
 F1 Score: 94.336
@@ -191,7 +191,7 @@ CLEAN DATASET AV. CHAR LEN::647.1529333333333
 
 LST 128 units
 ====================================================================================================================================
-Epoch 1/20
++   Epoch 1/20
 50/50 [==============================] - 1949s 39s/step - loss: 0.6093 - accuracy: 0.7186 - val_loss: 0.5079 - val_accuracy: 0.7960
 Epoch 2/20
 50/50 [==============================] - 4369s 88s/step - loss: 0.3271 - accuracy: 0.8698 - val_loss: 0.2512 - val_accuracy: 0.8970
@@ -486,3 +486,16 @@ Epoch 18/20
 50/50 [==============================] - 5427s 109s/step - loss: 0.0507 - accuracy: 0.9882 - val_loss: 0.2978 - val_accuracy: 0.9298
 Training Accuracy: 0.9796
 Testing Accuracy:  0.9311
+
+
+
+
+
+Training Accuracy: 0.9666
+Training F1 Score: 0.9662
+Training Precision: 0.9508
+Training Recall: 0.9842
+Testing Accuracy: 0.9168
+Testing F1 Score: 0.9169
+Testing Precision: 0.8899
+Testing Recall: 0.9509
